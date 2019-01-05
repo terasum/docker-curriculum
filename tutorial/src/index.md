@@ -213,7 +213,7 @@ Total reclaimed space: 212 B
 
 非常好！我们目前已经学会如何使用`docker run`命令了，并且我们还解释了一些比较重要的Docker生态术语。既然已经学会了这些，那么我们可以看看一些实际的玩意儿了，比如，如何通过Docker部署一个web 应用!
 
-### Static Sites
+### 静态站点
 
 Let's start by taking baby-steps. The first thing we're going to look at is how we can run a dead-simple static website. We're going to pull a Docker image from Docker Hub, run the container and see how easy it is to run a webserver.
 
