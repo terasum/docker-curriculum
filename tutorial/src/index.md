@@ -225,14 +225,14 @@ $ docker run --rm prakhar1989/static-site
 
 由于镜像在本地并不存在，客户端将首先将镜像从仓库拉取下来，然后再运行镜像。如果一切正常，那么你将会看到 `Nginx is runing...`的信息除数。好了现在你的服务已经正常运行了，应该怎么去查看是否正常工作了呢？我们的网站又运行监听在哪个端口呢，如何大概网站，以及最重要的，我们应该如何通过我们的宿主机直接访问正在运行的容器呢？别着急，我们先按 Ctrl+C结束这个容器。
 
-Well in this case, the client is not exposing any ports so we need to re-run the `docker run` command to publish ports. While we're at it, we should also find a way so that our terminal is not attached to the running container. This way, you can happily close your terminal and keep the container running. This is called **detached** mode.
+好吧，其实在上面的例子当中我们没有开放任何端口，为了完成这个任务我们需要在`docker run`命令的时候同时开放这些端口。当然我们需要完成这件事情，为了实现这个功能我们需要在运行容器的时候，不进入其交互式命令界面（不然的话我们就不能输入新的命令了，它将会一直都显示`Nginx is runing`）。通过这种方式，你可以在保持容器继续运行的同时，也能够继续使用你的终端，这种方式也成为**detached**模式。
 
 ```bash
 $ docker run -d -P --name static-site prakhar1989/static-site
 e61d12292d69556eabe2a44c16cbd54486b2527e2ce4f95438e504afb7b02810
 ```
 
-In the above command, `-d` will detach our terminal, `-P` will publish all exposed ports to random ports and finally `--name` corresponds to a name we want to give. Now we can see the ports by running the `docker port [CONTAINER]` command
+在上面的命令中，`-d`选项表示将释放我们的终端，以免附着到容器进程中，`-P`将会开放所有已经声明需要开放的端口，并为这些容器声明开放的端口分配一个随机的宿主机端口，最后`--name`表示我们需要为容器起的名字。现在我们可以通过命令`docker port [CONTAINER]`看到我们的容器运行在哪个端口：
 
 ```bash
 $ docker port static-site
@@ -240,11 +240,11 @@ $ docker port static-site
 443/tcp -> 0.0.0.0:32768
 ```
 
-You can open [http://localhost:32769](http://localhost:32769) in your browser.
+现在你可以在浏览器中打开 [http://localhost:32769](http://localhost:32769) 查看静态网站
 
-> Note: If you're using docker-toolbox, then you might need to use `docker-machine ip default` to get the IP.
+> 注意：如果你使用的是 docker-toolbox， 你可能需要使用 `docker-machine ip default` 取得实际IP
 
-You can also specify a custom port to which the client will forward connections to the container.
+你当然可以通过以下命令直接指定需要开放的端口，客户端将会把所有的连接转发到容器当中:
 
 ```bash
 $ docker run -p 8888:80 prakhar1989/static-site
@@ -256,20 +256,20 @@ Nginx is running...
   <img src="images/static.png" alt="static site">
 </picture>
 
-To stop a detached container, run `docker stop` by giving the container ID. In this case, we can use the name `static-site` we used to start the container.
+可以使用`docker stop [CONTAINER ID/NAME]`来停止一个非附着容器，在这个例子当中，我们也可以用容器名来停止这个容器:
 
 ```bash
 $ docker stop static-site
 static-site
 ```
 
-I'm sure you agree that was super simple. To deploy this on a real server you would just need to install Docker, and run the above Docker command. Now that you've seen how to run a webserver inside a Docker image, you must be wondering - how do I create my own Docker image? This is the question we'll be exploring in the next section.
+我相信你一定也觉得这个过程是十分简单的。如果要把这个网站部署到一个真实的服务器上，其实你只需要安装好Docker然后再运行上述命令即可。你一定想知道我是如何在Docker image中创建一个webserver的，这部分内容将在下一节中叙述：
 
 ### Docker Images
 
-We've looked at images before, but in this section we'll dive deeper into what Docker images are and build our own image! Lastly, we'll also use that image to run our application locally and finally deploy on [AWS](http://aws.amazon.com) to share it with our friends! Excited? Great! Let's get started.
+在前面我们已经介绍了Docker镜像的相关内容，但是在这一节当中我们需要深入地理解一下Docker 镜像是如何构建的。最后我们将把我们自己构建的应用镜像部署到[AWS](http://aws.amazon.com) ，这样我们就可以把我们第一个应用分享给我们的朋友啦，是不是很棒！让我们开始吧！
 
-Docker images are the basis of containers. In the previous example, we **pulled** the *Busybox* image from the registry and asked the Docker client to run a container **based** on that image. To see the list of images that are available locally, use the `docker images` command.
+Docker 镜像是容器的基础，在前面的例子当中，我们从镜像仓库**拉取**了*busybox*，然后请求Docker客户端基于这个镜像运行一个容器。我们可以通过`docker images`命令来看有哪些镜像是可用的：
 
 ```bash
 $ docker images
