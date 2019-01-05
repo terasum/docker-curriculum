@@ -2,29 +2,35 @@
 layout: layout.html
 ---
 
-## Introduction
+## 概述简介
 
-### What is Docker?
+### 什么是 Docker?
 
-Wikipedia defines [Docker](https://www.docker.com/) as
+
+维基百科将[Docker](https://www.docker.com/)定义为
 
 > an open-source project that automates the deployment of software applications inside **containers** by providing an additional layer of abstraction and automation of **OS-level virtualization** on Linux.
 
-Wow! That's a mouthful. In simpler words, Docker is a tool that allows developers, sys-admins etc. to easily deploy their applications in a sandbox (called *containers*) to run on the host operating system i.e. Linux. The key benefit of Docker is that it allows users to **package an application with all of its dependencies into a standardized unit** for software development. Unlike virtual machines, containers do not have the high overhead and hence enable more efficient usage of the underlying system and resources.
+> Docker是一个在Linux操作系统上通过**操作系统级别虚拟化技术**来提供一层额外的自动化抽象层实现将软件应用自动化地部署到容器当中的一个开源项目。
 
-### What are containers?
+Wow! 好绕啊！ 简单来说，Docker是一个允许开发人员、系统管理员等角色轻松地将他们的应用程序部署在沙箱（称为**容器**）中，以便在宿主操作系统（即Linux）上运行的工具。
 
-The industry standard today is to use Virtual Machines (VMs) to run software applications. VMs run applications inside a guest Operating System, which runs on virtual hardware powered by the server’s host OS.
+Docker的主要优点是，它允许用户**将具有所有应用程序以及其所依赖的包一起打包到用于软件开发的标准化模块单元（镜像）**中。与虚拟机不同的是，容器开销不高，能够更有效地使用底层系统和资源。
 
-VMs are great at providing full process isolation for applications: there are very few ways a problem in the host operating system can affect the software running in the guest operating system, and vice-versa. But this isolation comes at great cost — the computational overhead spent virtualizing hardware for a guest OS to use is substantial.
+### 什么是容器 （containers）？
 
-Containers take a different approach: by leveraging the low-level mechanics of the host operating system, containers provide most of the isolation of virtual machines at a fraction of the computing power.
+当今的行业标准是使用虚拟机（VM）来运行软件应用程序。 虚拟机运行客户操作系统(guest operation system), 用户在客户操作系统内运行应用程序。而客户操作系统在由宿主机操作系统(host operation system)支持的虚拟硬件上运行。
 
-### Why use containers?
+虚拟机非常适合为应用程序提供完全的进程隔离，宿主操作系统中的BUG很少会影响客户操作系统中运行的软件，反之亦然。 但是这种隔离成本很高 —— 由于为客户操作系统虚拟化硬件的计算开销很大。
 
-Containers offer a logical packaging mechanism in which applications can be abstracted from the environment in which they actually run. This decoupling allows container-based applications to be deployed easily and consistently, regardless of whether the target environment is a private data center, the public cloud, or even a developer’s personal laptop. This gives developers the ability to create predictable environments that are isolated from rest of the applications and can be run anywhere.
+容器技术采用了不同的方法：通过利用宿主操作系统的底层（low-level）的一些虚拟化机制，容器可以以一小部分计算能力提供大部分同虚拟机技术类似的隔离功能。
 
-From an operations standpoint, apart from portability containers also give more granular control over resources giving your infrastructure improved efficiency which can result in better utilization of your compute resources.
+### 为什么使用容器？
+
+容器提供了一种更加符合逻辑的打包机制，这种机制可以将应用程序从其实际运行的环境中抽象出来。不论目标运行环境是私有的数据中心，公有云还是开发人员的个人笔记本，这种分离打包过程都是一致的，并且是轻松的。因此基于容器的应用程序是环境可预测的，并且是同其它应用程序相隔离的，能够在任意支持Docker的宿主环境运行。
+
+从运维的角度看，除了高效可移植性之外，容器还可以对资源进行更加精细的控制，从而提高基础架构的效率，更好地利用计算资源。
+
 
 <picture>
   <source type="image/webp" srcset="images/interest.webp">
@@ -32,35 +38,42 @@ From an operations standpoint, apart from portability containers also give more 
   <p class="caption">Google Trends for Docker</p>
 </picture>
 
-Due to these benefits, containers (& Docker) have seen widespread adoption. Companies like Google, Facebook, Netflix and Salesforce leverage containers to make large engineering teams more productive and to improve utilization of compute resources. In fact, Google credited containers for eliminating the need for an entire data center.
+由于上述的这些优点，容器(和Docker)已经被业界广泛词用。 谷歌，Facebook，Netflix和Salesforce等公司利用容器来提高大型工程团队的工作效率，并提高计算资源的利用率。 实际上，谷歌认为容器技术降低了开发对整个数据中心的依赖程度。
 
-### What will this tutorial teach me?
+### 这个教程将会提供什么?
 
-This tutorial aims to be the one-stop shop for getting your hands dirty with Docker. Apart from demystifying the Docker landscape, it'll give you hands-on experience with building and deploying your own webapps on the Cloud. We'll be using [Amazon Web Services](http://aws.amazon.com) to deploy a static website, and two dynamic webapps on [EC2](https://aws.amazon.com/ec2/) using [Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) and [Elastic Container Service](https://aws.amazon.com/ecs/). Even if you have no prior experience with deployments, this tutorial should be all you need to get started.
+本教程旨在成为让您轻松掌握Docker的一站式教程。 除了揭开Docker风景的神秘面纱之外，它还将为您提供在云上构建和部署自己的Web应用程序的实践经验。我们将使用[Amazon Web Services](http://aws.amazon.com)在[EC2](https://aws.amazon.com/ec2/)上部署静态网站和两个动态网络应用程序 [Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/)和[Elastic Container Service](https://aws.amazon.com/ecs/)。 即使您之前没有部署经验，本教程也能够帮助您完成全部任务内容。
 
 ___________
 
-## Getting Started
+## 从这里开始
 
-This document contains a series of several sections, each of which explains a particular aspect of Docker. In each section, we will be typing commands (or writing code). All the code used in the tutorial is available in the [Github repo](http://github.com/prakhar1989/docker-curriculum).
+本文档包含一系列的几个部分，每个部分都解释了Docker的一个特定方面。 在每个部分中，我们将输入命令（或编写代码）。 本教程中使用的所有代码都可以在[Github repo](http://github.com/prakhar1989/docker-curriculum)中找到。
 
+> 请注意：本教程使用的是Docker **18.05.0-c2** 版本，如果您在学习过程当中发现由任何本教程和未来的Docker版本不兼容的问题，请随时提出(https://github.com/prakhar1989/docker-curriculum/issues). 非常感谢！
 
-> Note: This tutorial uses version **18.05.0-ce** of Docker. If you find any part of the tutorial incompatible with a future version, please raise an [issue](https://github.com/prakhar1989/docker-curriculum/issues). Thanks!
+### 预备资源
 
-### Prerequisites
-
-There are no specific skills needed for this tutorial beyond a basic comfort with the command line and using a text editor. Prior experience in developing web applications will be helpful but is not required. As we proceed further along the tutorial, we'll make use of a few cloud services. If you're interested in following along, please create an account on each of these websites:
+除了基本的命令行和文本编辑器的使用经验之外，本教程没有任何需要预先掌握的知识。如果之前有进行过Web相关的开发经验将会有所帮助，但不是必需的。为了能够顺利地完成本教程，我们需要使用一些云服务。如果要继续的话，请务必在以下的网站中均创建一个账户：
 
 - [Amazon Web Services](http://aws.amazon.com/)
 - [Docker Hub](https://hub.docker.com/)
 
 ### Setting up your computer
+### 设置您的电脑
 
-Getting all the tooling setup on your computer can be a daunting task, but thankfully as Docker has become stable, getting Docker up and running on your favorite OS has become very easy.
+在自己的电脑上安装开发工具与环境往往是一项艰巨的任务，但是好在Docker目前是一个非常稳定的产品，让Docker在您喜欢的操作系统上运行已经非常容易。
 
-Until a few releases ago, running Docker on OSX and Windows was quite a hassle. Lately however, Docker has invested significantly into improving the on-boarding experience for its users on these OSes, thus running Docker now is a cakewalk. The *getting started* guide on Docker has detailed instructions for setting up Docker on [Mac](https://www.docker.com/products/docker#/mac), [Linux](https://www.docker.com/products/docker#/linux) and [Windows](https://www.docker.com/products/docker#/windows).
+直到几个版本之前，在OSX和Windows运行Docker是非常麻烦的。但好在，Docker已经投入了大量的资源来改善这个体验，目前在各个操作系统上运行Docker是非常便捷的事情了。 Docker官方提供了简单的**getting started**教程，来指导大家如何在不同的操作系统上完成Docker的安装：[Mac](https://www.docker.com/products/docker#/mac), [Linux](https://www.docker.com/products/docker#/linux) 以及 [Windows](https://www.docker.com/products/docker#/windows).
 
-Once you are done installing Docker, test your Docker installation by running the following:
+> 译注： 由于安装教程是英文的，如果您使用的是Linux操作系统，可以使用阿里云一键安装脚本：
+> `curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -`
+> 
+> 如果您使用的是MacOS，您可以到[这里](https://hub.docker.com/editions/community/docker-ce-desktop-mac)下载dmg安装包。
+> 
+
+一旦已经完成Docker的安装,你可以终端中输入如下命令来测试你的Docker是否安装正确：
+
 
 ```bash
 $ docker run hello-world
@@ -74,19 +87,20 @@ ___________
 
 ## Hello World
 
-### Playing with Busybox
+### 玩一玩 Busybox
 
-Now that we have everything setup, it's time to get our hands dirty. In this section, we are going to run a [Busybox](https://en.wikipedia.org/wiki/BusyBox) container on our system and get a taste of the `docker run` command.
+现在为止我们已经准备妥当，是时候体验一下Docker了。在这部分，我们将会体验一下如何运行一个[Busybox]()镜像，并体验一下`docker run`命令。
 
-To get started, let's run the following in our terminal:
+简单开始，我们需要先在终端中运行如下命令：
 
 ```bash
 $ docker pull busybox
 ```
 
-> Note: Depending on how you've installed docker on your system, you might see a `permission denied` error after running the above command. If you're on a Mac, make sure the Docker engine is running. If you're on Linux, then prefix your `docker` commands with `sudo`. Alternatively you can [create a docker group](https://docs.docker.com/engine/installation/linux/linux-postinstall/) to get rid of this issue.
 
-The `pull` command fetches the busybox [**image**](https://hub.docker.com/_/busybox/) from the [**Docker registry**](https://hub.docker.com/explore/) and saves it to our system. You can use the `docker images` command to see a list of all images on your system.
+> 注意： 取决于你是如何在自己的电脑中安装Docker的，在运行上述命令之后，有可能会出现 `permission denied` 的错误。 如果你使用的是Mac电脑，首先确保你的Docker引擎应用已经运行。如果你在Linux上，该问题一般是用户权限不足的原因找出的，你可以在`docker`命令最前面加上`sudo`来运行，或者将当前用户置于`docker`用户组中：`sudo usermod -aG docker yourusername`，并重新登录即可。
+
+`pull`命令将会从[**Docker仓库**](https://hub.docker.com/explore/)拉取busybox的[**镜像**](https://hub.docker.com/_/busybox/)并保存到你的本地计算机。你可以使用`docker images`命令查看当前在你的操作系统中存在的所有镜像。
 
 ```bash
 $ docker images
@@ -96,28 +110,28 @@ busybox                 latest              c51f86c28340        4 weeks ago     
 
 ### Docker Run
 
-Great! Let's now run a Docker **container** based on this image. To do that we are going to use the almighty `docker run` command.
+完美！现在让我们试试如何运行一个基于busybox镜像的Docker容器。为了完成这件事我们需要使用`docker run`命令。
 
 ```bash
 $ docker run busybox
 $
 ```
 
-Wait, nothing happened! Is that a bug? Well, no. Behind the scenes, a lot of stuff happened. When you call `run`, the Docker client finds the image (busybox in this case), loads up the container and then runs a command in that container. When we run `docker run busybox`, we didn't provide a command, so the container booted up, ran an empty command and then exited. Well, yeah - kind of a bummer. Let's try something more exciting.
+等等，什么都没有发生！这是bug吗？emm，当然不是。在这个场景背后，发生了很多事情，当你运行了`run`命令，Docker客户端将会首先寻找一个镜像(在这个例子中是 busybox)，然后通过镜像将容器加载并运行。当我们运行`docker run busybox`的时候，我们没有为该容器提供我们需要运行的实际命令，因此这个容器启动之后，运行了一个空命令就退出了。好吧，真的是有一点点绕，那么让我们试试如何尝试一些更加激动人心的事情。
 
 ```bash
 $ docker run busybox echo "hello from busybox"
 hello from busybox
 ```
 
-Nice - finally we see some output. In this case, the Docker client dutifully ran the `echo` command in our busybox container and then exited it. If you've noticed, all of that happened pretty quickly. Imagine booting up a virtual machine, running a command and then killing it. Now you know why they say containers are fast! Ok, now it's time to see the `docker ps` command. The `docker ps` command shows you all containers that are currently running.
+Nice - 我们终于看到了一些输出。在这个例子中，Docker 客户端忠实地在busybox容器中执行了`echo`命令，然后退出了，如果你观察仔细的话，所有的动作运行得非常快。想象一下运行一个虚拟机并运行一条简单命令然后再关闭它需要花费多少时间。所以现在你知道容器是多么的快了吧。好啦！让我们看看`docker ps`命令能做什么。`docker ps`命令可以显示当前在你的系统当中所有正在运行的容器。
 
 ```bash
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 ```
 
-Since no containers are running, we see a blank line. Let's try a more useful variant: `docker ps -a`
+由于目前没有容器正在运行（之前的运行过的容器都退出了），我们只能看到空白的结果。让我们试试更加有用的命令参数 `docker ps -a`
 
 ```bash
 $ docker ps -a
@@ -127,9 +141,9 @@ ff0a5c3750b9        busybox             "sh"                12 minutes ago      
 14e5bd11d164        hello-world         "/hello"            2 minutes ago       Exited (0) 2 minutes ago                        thirsty_euclid
 ```
 
-So what we see above is a list of all containers that we ran. Do notice that the `STATUS` column shows that these containers exited a few minutes ago.
+我们看到命令列出了所有我们运行过的容器。格外注意一下`STATUS`列中显示的容器目前的状态，可以看到这些容器在几分钟之前才退出。
 
-You're probably wondering if there is a way to run more than just one command in a container. Let's try that now:
+你一定想知道怎么样才能让容器一直运行而不是直接退出，让我们试试下面的命令
 
 ```bash
 $ docker run -it busybox sh
@@ -139,13 +153,13 @@ bin   dev   etc   home  proc  root  sys   tmp   usr   var
  05:45:21 up  5:58,  0 users,  load average: 0.00, 0.01, 0.04
 ```
 
-Running the `run` command with the `-it` flags attaches us to an interactive tty in the container. Now we can run as many commands in the container as we want. Take some time to run your favorite commands.
+运行`run`并加上`-it`标志表示运行容器后，进入交互式命令行模式。进入交互式命令行之后我们可以在容器中运行任意多的我们希望运行的命令，你可以花上一些时间试试你最喜欢的命令。
 
-> **Danger Zone**: If you're feeling particularly adventurous you can try `rm -rf bin` in the container. Make sure you run this command in the container and **not** in your laptop/desktop. Doing this will not make any other commands like `ls`, `echo` work. Once everything stops working, you can exit the container (type `exit` and press Enter) and then start it up again with the `docker run -it busybox sh` command. Since Docker creates a new container every time, everything should start working again.
+> **危险操作**： 如果你突发奇想想在容器中试试`rm -rf bin`，请确保这条命令是在容器中而不是在你的实际笔记本和桌面电脑上运行，如果你做了这件事，你讲无法使用类似于`ls`、`echo`这样的命令，但是你可以退出容器，通过`exit`回车可以退出，当你重新用`docer run -it busybox sh`命令启动一个新的容器之后，由于Docker每次都会创建一个新的容器，所以所有的状态将恢复如旧。
 
-That concludes a whirlwind tour of the mighty `docker run` command, which would most likely be the command you'll use most often. It makes sense to spend some time getting comfortable with it. To find out more about `run`, use `docker run --help` to see a list of all flags it supports. As we proceed further, we'll see a few more variants of `docker run`.
+这是一个很简单的使用了`docker run`的教程，但这条命令将会是你最为常用的命令之一。你可能需要花点时间去适应它。如果你想知道更多有关`run`命令的细节，你可以使用`docker run --help`得到一个帮助列表，在后面的教程当中，我们将会看到更多的`docker run`命令选项。
 
-Before we move ahead though, let's quickly talk about deleting containers. We saw above that we can still see remnants of the container even after we've exited by running `docker ps -a`. Throughout this tutorial, you'll run `docker run` multiple times and leaving stray containers will eat up disk space. Hence, as a rule of thumb, I clean up containers once I'm done with them. To do that, you can run the `docker rm` command. Just copy the container IDs from above and paste them alongside the command.
+在我们继续之前，我们先看看如何删除一个容器，我们看到即使我们退出了容器，我们依旧还是能够通过`docker ps -a`看到容器依旧存在着。在这个教程当中，我们将会运行很多次`docker run`命令，然而容器的存在将会消耗存储空间，也因此我们可以删掉一些不必要的容器，通过`docker rm`命令，然后拷贝容器ID即可，具体命令如下：
 
 ```bash
 $ docker rm 305297d7a235 ff0a5c3750b9
@@ -153,15 +167,16 @@ $ docker rm 305297d7a235 ff0a5c3750b9
 ff0a5c3750b9
 ```
 
-On deletion, you should see the IDs echoed back to you. If you have a bunch of containers to delete in one go, copy-pasting IDs can be tedious. In that case, you can simply run -
+当删除成功，你讲看到被删除的容器ID被输出，如果你有很多容器需要删除，又不想一次一次赋值ID那么你可以通过如下命令完成一次性删除:
 
 ```bash
 $ docker rm $(docker ps -a -q -f status=exited)
 ```
 
-This command deletes all containers that have a status of `exited`. In case you're wondering, the `-q` flag, only returns the numeric IDs and `-f` filters output based on conditions provided. One last thing that'll be useful is the `--rm` flag that can be passed to `docker run` which automatically deletes the container once it's exited from. For one off docker runs, `--rm` flag is very useful. 
+这条命令将会删除所有状态为`exited`的容器，`-q`选项表示将会只返回容器16进制容器ID, `-f`表示输出将会基于后面的过滤条件。最后我们捎带提一下`--rm`，在`docker run`之时加入`--rm`选项，当该容器退出之后，容器将会自动删除，因此`--rm`选项是非常有用的。
 
-In later versions of Docker, the `docker container prune` command can be used to achieve the same effect.
+在最新版本的 Docker中， `docker container prune` 命令将会得到同上述`docker rm ...`相同的效果
+
 
 ```bash
 $ docker container prune
@@ -174,17 +189,22 @@ f98f9c2aa1eaf727e4ec9c0283bcaa4762fbdba7f26191f26c97f64090360
 Total reclaimed space: 212 B
 ```
 
-Lastly, you can also delete images that you no longer need by running `docker rmi`.
+最后的最后，如果你想删除一个不想要的镜像，你可以通过`docker rmi <imageid>` 完成。
 
-### Terminology
 
-In the last section, we used a lot of Docker-specific jargon which might be confusing to some. So before we go further, let me clarify some terminology that is used frequently in the Docker ecosystem.
+### 术语
 
-- *Images* - The blueprints of our application which form the basis of containers. In the demo above, we used the `docker pull` command to download the **busybox** image.
-- *Containers* - Created from Docker images and run the actual application. We create a container using `docker run` which we did using the busybox image that we downloaded. A list of running containers can be seen using the `docker ps` command.
-- *Docker Daemon* - The background service running on the host that manages building, running and distributing Docker containers. The daemon is the process that runs in the operating system to which clients talk to.
-- *Docker Client* - The command line tool that allows the user to interact with the daemon. More generally, there can be other forms of clients too - such as [Kitematic](https://kitematic.com/) which provide a GUI to the users.
-- *Docker Hub* - A [registry](https://hub.docker.com/explore/) of Docker images. You can think of the registry as a directory of all available Docker images. If required, one can host their own Docker registries and can use them for pulling images.
+在这一节中我们介绍了很多Docker相关的专业术语，它可能让大家困惑。因此在我们继续之前，我们需要澄清一下这些术语的含义，因为这些术语在Docker生态中被大量使用。
+
+- *Images* - 镜像，我没让你放入应用的基础蓝图，所有的容器都基于镜像为基础运行，在前面的`docker pull`命名就是一个拉取镜像的过程。
+
+- *Containers* - 容器，是从镜像中派生出来的应用实例，可以理解为镜像是一个“类”，而容器是一个“对象”。我们可以通过`docker run`创建一个容器，也可以通过`docker ps`列出当前正在运行的容器实例列表
+
+- *Docker Daemon* - Docker 守护进程，在宿主机上运行的，支持Docker功能的守护进程，所有的Docker容器进程都通过该服务来和宿主环境进行通信。
+
+- *Docker Client* - Docker客户端，是一个允许用户同Docker Daemon 交互的命令行工具. 当然还有除了官方工具之外的客户端工具，如[Kitematic](https://kitematic.com/),它提供了用户界面方面用户操作Docker。
+
+- *Docker Hub* - 一个Docker镜像仓库[registry](https://hub.docker.com/explore/)。你可以把镜像仓库理解为是镜像的文件夹，如果需要的话，你可以从这个地方找到对应的镜像完成你的工作。
 
 
 -------
