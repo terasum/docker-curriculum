@@ -217,7 +217,7 @@ Total reclaimed space: 212 B
 
 让我们先从简单的开始。首先我们先学习一下如何运行一个非常简单的静态网站。我们首先从Docker Hub上拉取一个镜像下来，然后我们看看通过容器运行一个webserver是多么地简单。
 
-那我们就开始吧，我们将会使用一个简单的[单页网站](http://github.com/prakhar1989/docker-curriculum) that I've already created for the purpose of this demo and hosted on the [registry](https://hub.docker.com/r/prakhar1989/static-site/) - `prakhar1989/static-site`. We can download and run the image directly in one go using `docker run`. As noted above, the `--rm` flag automatically removes the container when it exits.
+那我们就开始吧，我们将会使用一个简单的[单页网站](http://github.com/prakhar1989/docker-curriculum) , 这是我用来演示这个例子所创建的一个简单的demo，并且将这个demo运行在了 [registry](https://hub.docker.com/r/prakhar1989/static-site/) - `prakhar1989/static-site` 上面.我们可以下载并且通过`docker run`直接运行这个景象，当然我们在前面也提到过，用过为命令添加`--rm`选项，可以自动地将停止的容器删除。
 
 ```bash
 $ docker run --rm prakhar1989/static-site
