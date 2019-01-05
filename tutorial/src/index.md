@@ -211,7 +211,7 @@ Total reclaimed space: 212 B
 
 ## Docker 上的 Webapp
 
-Great! So we have now looked at `docker run`, played with a Docker container and also got a hang of some terminology. Armed with all this knowledge, we are now ready to get to the real-stuff, i.e. deploying web applications with Docker!
+非常好！我们目前已经学会如何使用`docker run`命令了，并且我们还解释了一些比较重要的Docker生态术语。既然已经学会了这些，那么我们可以看看一些实际的玩意儿了，比如，如何通过Docker部署一个web 应用!
 
 ### Static Sites
 
