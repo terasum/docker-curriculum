@@ -215,8 +215,7 @@ Total reclaimed space: 212 B
 
 ### 静态站点
 
-让我们先从简单的开始。首先我们先学习一下如何运行一个非常简单的静态网站。
-Let's start by taking baby-steps. The first thing we're going to look at is how we can run a dead-simple static website. We're going to pull a Docker image from Docker Hub, run the container and see how easy it is to run a webserver.
+让我们先从简单的开始。首先我们先学习一下如何运行一个非常简单的静态网站。我们首先从Docker Hub上拉取一个镜像下来，然后我们看看通过容器运行一个webserver是多么地简单。
 
 Let's begin. The image that we are going to use is a single-page [website](http://github.com/prakhar1989/docker-curriculum) that I've already created for the purpose of this demo and hosted on the [registry](https://hub.docker.com/r/prakhar1989/static-site/) - `prakhar1989/static-site`. We can download and run the image directly in one go using `docker run`. As noted above, the `--rm` flag automatically removes the container when it exits.
 
