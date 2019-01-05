@@ -223,7 +223,7 @@ Total reclaimed space: 212 B
 $ docker run --rm prakhar1989/static-site
 ```
 
-Since the image doesn't exist locally, the client will first fetch the image from the registry and then run the image. If all goes well, you should see a `Nginx is running...` message in your terminal. Okay now that the server is running, how to see the website? What port is it running on? And more importantly, how do we access the container directly from our host machine? Hit Ctrl+C to stop the container.
+由于镜像在本地并不存在，客户端将首先将镜像从仓库拉取下来，然后再运行镜像。如果一切正常，那么你将会看到 `Nginx is runing...`的信息除数。好了现在你的服务已经正常运行了，应该怎么去查看是否正常工作了呢？我们的网站又运行监听在哪个端口呢，如何大概网站，以及最重要的，我们应该如何通过我们的宿主机直接访问正在运行的容器呢？别着急，我们先按 Ctrl+C结束这个容器。
 
 Well in this case, the client is not exposing any ports so we need to re-run the `docker run` command to publish ports. While we're at it, we should also find a way so that our terminal is not attached to the running container. This way, you can happily close your terminal and keep the container running. This is called **detached** mode.
 
