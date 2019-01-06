@@ -223,7 +223,7 @@ Total reclaimed space: 212 B
 $ docker run --rm prakhar1989/static-site
 ```
 
-由于镜像在本地并不存在，客户端将首先将镜像从仓库拉取下来，然后再运行镜像。如果一切正常，那么你将会看到 `Nginx is runing...`的信息除数。好了现在你的服务已经正常运行了，应该怎么去查看是否正常工作了呢？我们的网站又运行监听在哪个端口呢，如何大概网站，以及最重要的，我们应该如何通过我们的宿主机直接访问正在运行的容器呢？别着急，我们先按 Ctrl+C结束这个容器。
+由于镜像在本地并不存在，客户端将首先将镜像从仓库拉取下来，然后再运行镜像。如果一切正常，那么你将会看到 `Nginx is runing...`的信息显示在终端上。好了现在你的服务已经正常运行了，应该怎么去查看是否正常工作了呢？我们的网站又运行监听在哪个端口呢，如何大概网站，以及最重要的，我们应该如何通过我们的宿主机直接访问正在运行的容器呢？别着急，我们先按 Ctrl+C结束这个容器。
 
 好吧，其实在上面的例子当中我们没有开放任何端口，为了完成这个任务我们需要在`docker run`命令的时候同时开放这些端口。当然我们需要完成这件事情，为了实现这个功能我们需要在运行容器的时候，不进入其交互式命令界面（不然的话我们就不能输入新的命令了，它将会一直都显示`Nginx is runing`）。通过这种方式，你可以在保持容器继续运行的同时，也能够继续使用你的终端，这种方式也成为**detached**模式。
 
@@ -283,72 +283,72 @@ busybox                         latest              c51f86c28340        9 weeks 
 hello-world                     latest              0a6ba66e537a        11 weeks ago        960 B
 ```
 
-The above gives a list of images that I've pulled from the registry, along with ones that I've created myself (we'll shortly see how). The `TAG` refers to a particular snapshot of the image and the `IMAGE ID` is the corresponding unique identifier for that image.
+上面列出了当前我们从仓库中拉取的所有的镜像列表，当然还包括了一个由我自己创建的镜像（很快我们将知道如何创建一个镜像）。其中`TAG`表示当前的这个镜像的快照版本（同一个镜像可以有很多快照），而`IMAGE ID`则是对应的唯一的镜像标识符。
 
-For simplicity, you can think of an image akin to a git repository - images can be [committed](https://docs.docker.com/engine/reference/commandline/commit/) with changes and have multiple versions. If you don't provide a specific version number, the client defaults to `latest`. For example, you can pull a specific version of `ubuntu` image
+简单地说，你可以把镜像理解为是一个git仓库——镜像被修改之后可以被[提交 committed](https://docs.docker.com/engine/reference/commandline/commit/)，当然它也会有很多版本，也就是前面说的快照版本。如果你没有制定一个特定的版本号，Docker客户端会帮你打上一个`latest`的版本。例如，拉取一个特定版本的`ubuntu`镜像:
 
 ```bash
 $ docker pull ubuntu:12.04
 ```
 
-To get a new Docker image you can either get it from a registry (such as the Docker Hub) or create your own. There are tens of thousands of images available on [Docker Hub](https://hub.docker.com/explore/). You can also search for images directly from the command line using `docker search`.
+为了得到一个新的Docker镜像，你可以从镜像仓库拉取（例如Docker Hub），或者自行创建。[Docker Hub](https://hub.docker.com/explore/)上有成千上万的镜像.你当然也可以直接用命令`docker search`搜索所需的镜像。
 
-An important distinction to be aware of when it comes to images is the difference between base and child images.
+这里需要重点解释一下 base 和 child 镜像之间的区别：
 
-- **Base images** are images that have no parent image, usually images with an OS like ubuntu, busybox or debian.
+- **Base images** 基础镜像，该镜像没有父镜像，通常是一些基本的操作系统镜像如 ubuntu, busybox 或是 debian。
 
-- **Child images** are images that build on base images and add additional functionality.
+- **Child images** 子镜像，是基于基础镜像创建并增加了一些功能的镜像。
 
-Then there are official and user images, which can be both base and child images.
+这里还有官方镜像和用户镜像的区别，他们都可以是基础镜像和子镜像。
 
-- **Official images** are images that are officially maintained and supported by the folks at Docker. These are typically one word long. In the list of images above, the `python`, `ubuntu`, `busybox` and `hello-world` images are official images.
+- **官方镜像** 是官方支持的一些镜像，镜像名通常只有一个单词，在上面我们提及的镜像当中如 `python`, `ubuntu`, `busybox` 和 `hello-world` 都是官方镜像
 
-- **User images** are images created and shared by users like you and me. They build on base images and add additional functionality. Typically, these are formatted as `user/image-name`.
+- **用户镜像** 是你我这样的普通用户创建的镜像，往往是在基础镜像上添加了一些功能并提交的，这些镜像名的格式一般都是 `user/image-name`。
 
-### Our First Image
+### 我们的第一个镜像
 
-Now that we have a better understanding of images, it's time to create our own. Our goal in this section will be to create an image that sandboxes a simple [Flask](http://flask.pocoo.org) application. For the purposes of this workshop, I've already created a fun little [Flask app](https://github.com/prakhar1989/docker-curriculum/tree/master/flask-app) that displays a random cat `.gif` every time it is loaded - because you know, who doesn't like cats? If you haven't already, please go ahead and clone the repository locally like so -
+现在我们已经对镜像有一些更加深入的理解了，是时候创建一个你自己的镜像啦。这小节的目标就是创建一个简单的 [flask](http://falsk.pocoo.org) 应用。为了演示这个小李子，我已经创建了一个简单的[flask app](https://github.com/prakhar1989/docker-curriculum/tree/master/flask-app) 这个web网站每次打开的时候，将会随机展示一个猫咪的图片， 请clone项目并进入对应的文件夹中 -
 
 ```bash
 $ git clone https://github.com/prakhar1989/docker-curriculum
 $ cd docker-curriculum/flask-app
 ```
 
-> This should be cloned on the machine where you are running the docker commands and *not* inside a docker container.
+> 这个命令不应该在docker容器当中运行，而是在您的宿主操作系统的终端中运行
 
-The next step now is to create an image with this web app. As mentioned above, all user images are based off of a base image. Since our application is written in Python, the base image we're going to use will be [Python 3](https://hub.docker.com/_/python/). More specifically, we are going to use the `python:3-onbuild` version of the python image.
+下一步则是如何创建一个属于这个web app的镜像，就像上面提及的，所有的用户镜像都是基于这个基础镜像的，由于我们的应用是用Python开发的，我们需要一个python的基础镜像，所以我们选择了一个[python3镜像](https://hub.docker.com/_/python/). 我们需要指定一个`TAG`，在这个例子当中，我们将会指定`python:3-onbuild` 这个版本作为我们的python镜像。
 
-What's the `onbuild` version you might ask?
+那么，什么是`onbuild` 版本呢?
 
-> These images include multiple ONBUILD triggers, which should be all you need to bootstrap most applications. The build will COPY a `requirements.txt` file, RUN `pip install` on said file, and then copy the current directory into `/usr/src/app`.
+> 这些镜像可能包括多个onbuild触发器，可能是在构建多种应用的时候需要的。 这个版本将会拷贝一个`requirements.txt`文件，然后运行`pip install`来安装依赖文件中定义的依赖依赖安装，然后拷贝当前的工作目录到`user/src/app`下。
 
-In other words, the `onbuild` version of the image includes helpers that automate the boring parts of getting an app running. Rather than doing these tasks manually (or scripting these tasks), these images do that work for you. We now have all the ingredients to create our own image - a functioning web app and a base image. How are we going to do that? The answer is - using a **Dockerfile**.
+换句话说，`onbuild`的版本表示这个镜像包括了一些需要支持这个应用运行的基本依赖工具，安装这些工具往往很麻烦。为了减少类似的工作，这个镜像已经帮你完成了大部分工作，因此可以直接使用，用来创建你自己的镜像，将其作为基础镜像。那么我们该如何创建我们自己的镜像呢？
 
 ### Dockerfile
 
-A [Dockerfile](https://docs.docker.com/engine/reference/builder/) is a simple text-file that contains a list of commands that the Docker client calls while creating an image. It's a simple way to automate the image creation process. The best part is that the [commands](https://docs.docker.com/engine/reference/builder/#from) you write in a Dockerfile are *almost* identical to their equivalent Linux commands. This means you don't really have to learn new syntax to create your own dockerfiles.
+[Dockerfile](https://docs.docker.com/engine/reference/builder/) 是一个简单的文本文件，包括一些用户创建镜像的命令，这些命令都由Docker客户端帮助运行。 这是一个非常简单的用户创建镜像的方法。
+在编写Dockerfile中，我自己最喜欢的部分是，编写docker[命令](https://docs.docker.com/engine/reference/builder/#from) 几乎就像在编写通常的Linux命令一样，这也就意味着你不需要花费时间精力学习心得语法。
 
-The application directory does contain a Dockerfile but since we're doing this for the first time, we'll create one from scratch. To start, create a new blank file in our favorite text-editor and save it in the **same** folder as the flask app by the name of `Dockerfile`.
+应用目录刚开始不包括Dockerfile,所以我们需要从头创建一个。为了开始我们新建一个空白的文本文件，然后将其保存到和我们的flask app相同的文件下。并且将其命名为`Docerfile`。
 
-We start with specifying our base image. Use the `FROM` keyword to do that -
+我们首先需要制定我们的基础镜像，用`FROM`关键字来指定 -
 
 ```dockerfile
 FROM python:3-onbuild
 ```
 
-The next step usually is to write the commands of copying the files and installing the dependencies. Luckily for us, the `onbuild` version of the image takes care of that. The next thing we need to specify is the port number that needs to be exposed. Since our flask app is running on port `5000`, that's what we'll indicate.
+下一步通常是写一些命令来拷贝一些文件以及安装文件，但是幸运的是，`onbuild`版本已经帮助我们完成了这个工作，所以我们不需要关注这一部分，下一步我们需要声明我们需要容器暴露的端口。由于我们的flask app通常运行在`5000`端口，因此我们需要指定它：
 
 ```dockerfile
 EXPOSE 5000
 ```
-
-The last step is to write the command for running the application, which is simply - `python ./app.py`. We use the [CMD](https://docs.docker.com/engine/reference/builder/#cmd) command to do that -
+最后一步我们需要输入命令运行我们的应用，其实就是简单的 `python ./app.py`。我们可以使用简单的[CMD](https://docs.docker.com/engine/reference/builder/#cmd) 完成这件事 -
 
 ```dockerfile
 CMD ["python", "./app.py"]
 ```
 
-The primary purpose of `CMD` is to tell the container which command it should run when it is started. With that, our `Dockerfile` is now ready. This is how it looks like -
+`CMD`关键字的主要目的是指定容器启动的时候运行的命令。一旦指定了`CMD`我们的`Dockerfile`基本上已经完成了，现在它看起来像是这样的：
 
 ```dockerfile
 # our base image
@@ -361,9 +361,9 @@ EXPOSE 5000
 CMD ["python", "./app.py"]
 ```
 
-Now that we have our `Dockerfile`, we can build our image. The `docker build` command does the heavy-lifting of creating a Docker image from a `Dockerfile`.
+现在我们已经有了`Dockerfile`，我们可以创建我们的镜像了，通过`docker build`命令，Docker客户端将会帮助我们完成一大堆事情，它会读取`Dockerfile`并构建镜像。
 
-The section below shows you the output of running the same. Before you run the command yourself (don't forget the period), make sure to replace my username with yours. This username should be the same one you created when you registered on [Docker hub](https://hub.docker.com). If you haven't done that yet, please go ahead and create an account. The `docker build` command is quite simple - it takes an optional tag name with `-t` and a location of the directory containing the `Dockerfile`.
+接下来我将展示运行`docker build`之后的输出内容。在运行你自己的命令的时候，请一定把目标镜像的镜像名`/`之前的用户名换成你自己的，这个用户名应当和你在[Docker Hub]()上创建的一样。如果你没有注册账户，那么请先注册一个。`docker build`命令通常非常简单——需要提供`-t`选项，并提供一个镜像名称，最后需要指定一个有Dockerfile的文件夹路径。
 
 ```bash
 $ docker build -t prakhar1989/catnip .
@@ -388,23 +388,23 @@ Removing intermediate container f01401a5ace9
 Successfully built 13e87ed1fbc2
 ```
 
-If you don't have the `python:3-onbuild` image, the client will first pull the image and then create your image. Hence, your output from running the command will look different from mine. Look carefully and you'll notice that the on-build triggers were executed correctly. If everything went well, your image should be ready! Run `docker images` and see if your image shows.
+如果你没有`python:3-onbuild`镜像，客户端将会帮你先拉取这个镜像，并创建你自己的镜像，你的输出可能和我的会略有不同。请你注意你的镜像的on-build触发脚本是否正常执行，如果一切顺利，你可以运行`docker images`看看你的镜像是否创建成功。
 
-The last step in this section is to run the image and see if it actually works (replacing my username with yours).
+最后一步就是运行你刚刚创建的镜像，看看是否正常创建（可能需要替换掉我的用户名）。
 
 ```bash
 $ docker run -p 8888:5000 prakhar1989/catnip
  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
 ```
 
-The command we just ran used port 5000 for the server inside the container, and exposed this externally on port 8888. Head over to the URL with port 8888, where your app should be live.
+这个命令将运行应用，并在容器内监听5000端口，但是由于我们在运行容器的时候，将容器内部的5000端口映射到了宿主系统的8888端口，因此应用实际上运行在了8888端口。
 
 <picture>
   <source type="image/webp" srcset="images/catgif.webp">
   <img src="images/catgif.png" alt="cat gif website">
 </picture>
 
-Congratulations! You have successfully created your first docker image.
+恭喜你！你已经创建了你自己的第一个Docker镜像！
 
 ### Docker on AWS
 
